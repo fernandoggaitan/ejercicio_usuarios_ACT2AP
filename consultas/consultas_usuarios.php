@@ -1,5 +1,19 @@
 <?php
 
+//Fetch all:
+/*
+    [
+        [
+            ID => 1,
+            nombre => 'Algo'
+        ],
+        [
+            ID => 2,
+            nombre => 'Algo 2'
+        ]
+    ]
+*/
+
 function getUsuarios(PDO $conexion, $rol=null)
 {
     $usuarios = [];
@@ -13,4 +27,25 @@ function getUsuarios(PDO $conexion, $rol=null)
         $usuarios = $consulta->fetchAll(PDO::FETCH_ASSOC);
     }
     return $usuarios;
+}
+
+function login(PDO $conexion, $email, $contrasena)
+{
+
+    $consulta = $conexion->prepare('
+        SELECT id, nombre, rol
+        FROM usuarios
+        WHERE email = :email
+        AND contrasena = :contrasena
+    ');
+
+    $consulta->bindValue(':email', $email);
+    $consulta->bindValue(':contrasena', $contrasena);
+
+    $consulta->execute();
+
+    $usuario = $consulta->fetch(PDO::FETCH_ASSOC);
+
+    return $usuario;
+
 }
