@@ -49,3 +49,39 @@ function login(PDO $conexion, $email, $contrasena)
     return $usuario;
 
 }
+
+function getUsuarioByEmail(PDO $conexion, $email)
+{
+
+    $consulta = $conexion->prepare('
+        SELECT id, nombre, rol
+        FROM usuarios
+        WHERE email = :email
+    ');
+
+    $consulta->bindValue(':email', $email);
+
+    $consulta->execute();
+
+    $usuario = $consulta->fetch(PDO::FETCH_ASSOC);
+
+    return $usuario;
+
+}
+
+function addUsuario(PDO $conexion, array $data)
+{
+
+    $consulta = $conexion->prepare('
+        INSERT INTO usuarios(nombre, email, contrasena, cv, rol)
+        VALUES(:nombre, :email, :contrasena, :cv, "Postulante")
+    ');
+
+    $consulta->bindValue(':nombre', $data['nombre']);
+    $consulta->bindValue(':email', $data['email']);
+    $consulta->bindValue(':contrasena', $data['contrasena']);
+    $consulta->bindValue(':cv', $data['cv']);
+
+    $consulta->execute();
+
+}

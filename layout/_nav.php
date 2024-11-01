@@ -1,3 +1,9 @@
+<?php
+
+$usuario = $_SESSION['usuario'] ?? null;
+
+?>
+
 <!-- Nav -->
 <nav class="navbar navbar-dark bg-dark fixed-top mb-5">
     <div class="container-fluid">
@@ -18,7 +24,12 @@
                 <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
                     <li class="nav-item">
                         <a class="nav-link" aria-current="page" href="index.php">Inicio</a>
-                    </li>                    
+                    </li>
+                    <?php if($usuario && $usuario['rol'] != 'Postulante'): ?>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="usuarios.php">Usuarios</a>
+                        </li>
+                    <?php endif ?>
                     <li class="nav-item">
                         <a class="nav-link" href="cerrar_sesion.php">Cerrar sesión</a>
                     </li>

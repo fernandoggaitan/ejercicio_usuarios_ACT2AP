@@ -16,7 +16,7 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' )
 
     if( $usuario ){
         $_SESSION['usuario'] = $usuario;
-        header('Location: dashboard.php');
+        header('Location: index.php');
     }else{
         $error = 'Los datos son incorrectos';
     }
@@ -26,7 +26,7 @@ if( $_SERVER['REQUEST_METHOD'] == 'POST' )
 ?>
 
 <!doctype html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <!-- Required meta tags -->

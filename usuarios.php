@@ -1,5 +1,14 @@
 <?php
 
+session_start();
+
+$usuario = $_SESSION['usuario'] ?? null;
+
+if(!$usuario || $usuario['rol'] == 'Postulante')
+{
+    header('Location: login.php');
+}
+
 require_once ('./consultas/conexion.php');
 require_once('./consultas/consultas_usuarios.php');
 require_once('./funciones/funciones_paginador.php');
@@ -32,9 +41,9 @@ $enlaces = paginador_enlaces($cantidad, $pagina_actual, $cuantos_por_pagina);
 
 <body>
 
-    <div class="container">
+    <?php require('layout/_nav.php') ?>
 
-        <?php require('layout/_nav.php') ?>
+    <div class="container">
 
         <h1> Lista de usuarios </h1>
 
@@ -62,12 +71,16 @@ $enlaces = paginador_enlaces($cantidad, $pagina_actual, $cuantos_por_pagina);
                 </tr>
             </thead>
             <tbody>
-                <?php foreach($usuarios as $usuario): ?>
+                <?php foreach($usuarios as $item): ?>
                     <tr>
-                        <td> <?php echo $usuario['nombre'] ?> </td>
-                        <td> <?php echo $usuario['email'] ?> </td>
-                        <td> <?php echo $usuario['rol'] ?> </td>
-                        <td>  </td>
+                        <td> <?php echo $item['nombre'] ?> </td>
+                        <td> <?php echo $item['email'] ?> </td>
+                        <td> <?php echo $item['rol'] ?> </td>
+                        <td>
+                            <?php if($usuario['rol'] == 'Administrador'): ?>
+                                <a href="" class="btn btn-primary"> Gestionar rol </a>
+                            <?php endif ?>
+                        </td>
                     </tr>
                 <?php endforeach ?>
             </tbody>

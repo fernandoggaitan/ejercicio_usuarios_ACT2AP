@@ -1,6 +1,8 @@
 <?php
 
 require_once('funciones/funciones_input.php');
+require_once('consultas/conexion.php');
+require_once('consultas/consultas_usuarios.php');
 
 $nombre = test_input($_POST['nombre'] ?? null);
 $email = filter_var($_POST['email'] ?? null, FILTER_VALIDATE_EMAIL);
@@ -30,6 +32,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
         $errores[] = 'Usted debe ingresar una contraseña';
     }
 
+    //Verifica si el usuario ya se registró con ese correo.
+    if( getUsuarioByEmail($conexion, $email) )
+    {
+        $errores[] = 'Usted ya se ha registrado';
+    }
+
     //Verifica si el archivo tiene algún error.
     if( $archivo['error'] > 0 )
     {
@@ -54,8 +62,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST')
     if( empty($errores) )
     {
 
-        echo 'Gracias por registrarte';
-        exit;
+        $time = time();
+        $cv = "cvs/{$time}{$archivo['name']}";
+
+        move_uploaded_file( $archivo['tmp_name'], $cv );
+
+        addUsuario($conexion, [
+            'nombre' => $nombre,
+            'email' => $email,
+            'contrasena' => $contrasena,
+            'cv' => $cv
+        ]);
+
+        header('Location: login.php');
 
     }
 
